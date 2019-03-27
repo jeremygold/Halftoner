@@ -5,7 +5,7 @@ The code uses [OpenCV](https://opencv.org/) to do the heavy lifting. I used http
 
 Image output formats include anything OpenCV supports (e.g. JPG, PNG), plus SVG.
 
-Works best on contrasty, black-and-white images. To re-colour dots/background, it's probably easier to post-process the SVG (e.g. in [Inkscape](https://inkscape.org/)), rather then mod the code. YMMV.
+Works best on contrasty, black-and-white images. To re-colour dots / background, it's probably easier to post-process the SVG (e.g. in [Inkscape](https://inkscape.org/)), rather then mod the code. YMMV.
 
 <pre>
 usage: halftoner.py [-h] -i INPUT -o OUTPUT [-r RADIUS] [-t THRESHOLD]

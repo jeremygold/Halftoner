@@ -59,13 +59,13 @@ for yy in range(0, countY):
         iX = math.floor((((xx * 3.0) + 1.0) * outRadius) + (0 if (yy % 2 == 0) else (1.5 * outRadius)))
         iC = convolved[iY, iX]
         if iC > 0: # ignore black
-            rr = ((convolved[iY, iX] / 255.0) * inRadius) - 1.0 # 1px spacer
-            if rr > threshold: # ignore small
+            fR = ((convolved[iY, iX] / 255.0) * inRadius) - 1.0 # 1px spacer
+            if fR > threshold: # ignore small
                 if isSVG:
-                    sSVG.append('<circle id="c' + '{:04d}'.format(ii) + '" cx="' + str(iX) + '" cy="' + str(iY) + '" r="' + '{0:.2f}'.format(rr) + '" stroke="none" fill="white" />')
+                    sSVG.append('<circle id="c' + '{:04d}'.format(ii) + '" cx="' + str(iX) + '" cy="' + str(iY) + '" r="' + '{0:.2f}'.format(fR) + '" stroke="none" fill="white" />')
                     ii += 1
                 else:
-                    cv2.circle(outImage, (iX, iY), math.floor(rr), (255, 255, 255), -1) # white circle
+                    cv2.circle(outImage, (iX, iY), math.floor(fR), (255, 255, 255), -1) # white circle
                 # end if
             # end if
         # end if
