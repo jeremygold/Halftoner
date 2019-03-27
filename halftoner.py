@@ -79,5 +79,5 @@ if isSVG:
     file_out.write('\n'.join(sSVG))
     file_out.close()
 else:
-    cv2.imwrite('out.png', outImage)
+    cv2.imwrite(outFile, outImage)
 # end if
