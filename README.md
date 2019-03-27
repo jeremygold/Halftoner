@@ -1,11 +1,11 @@
 # Python Hex-grid Halftoner
-I couldn't find Python halftoner that worked on a hexagonal grid pattern (there are several that work on an orthogonal grid), so I wrote my own.
+I couldn't find a Python halftoner that worked on a hexagonal grid pattern (there are several that work on an orthogonal grid), so I wrote my own.
 
 The code uses [OpenCV](https://opencv.org/) to do the heavy lifting. I used https://hub.docker.com/r/yoanlin/opencv-python3
 
 Image output formats include anything OpenCV supports (e.g. JPG, PNG), plus SVG.
 
-Works best on contrasty, black-and-white images. To re-colour dots/background, it's probably easier to post-process the SVG (e.g. in Inkscape), rather then mod the code. YMMV.
+Works best on contrasty, black-and-white images. To re-colour dots/background, it's probably easier to post-process the SVG (e.g. in [Inkscape](https://inkscape.org/)), rather then mod the code. YMMV.
 
 <pre>
 usage: halftoner.py [-h] -i INPUT -o OUTPUT [-r RADIUS] [-t THRESHOLD]
