@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 # //////////////////////////////////////////////////////////////////////////////
 # //  
 # //  'Hex Halftoner' by Chris Molloy (http://chrismolloy.com/halftoner)
@@ -6,7 +8,15 @@
 # //  
 # //////////////////////////////////////////////////////////////////////////////
 
-#!/usr/bin/python3
+# NOTES:
+# The ratio of the area of a circle to a hexagon = √3π/6 = 0.906899682 - this 
+# represents the amount by which the final result will be 'dimmer' than the source 
+# image - you may wish to adjust the brightness of your source to allow for that.
+# 
+# My original 'circleMask' used cv2.circle() to create a 'white' circle on a black 
+# background to use as a convolution kernel (after scaling). Whilst this was 'neat', 
+# it was also kind of 'opaque', so I changed to using an explictly defined set of 
+# kernel weights.
 
 import argparse
 import cv2
@@ -29,9 +39,18 @@ isSVG = (outFile[-4:].lower() == '.svg')
 inRadius = math.ceil(math.sqrt(3 / 4) * outRadius)
 diameter = (outRadius * 2) + 1 # pseudo-diameter (always odd, as per convolution kernel reqs)
 
-circleMask = np.zeros((diameter, diameter), dtype='float32')
-cv2.circle(circleMask, (outRadius, outRadius), outRadius, (1, 1, 1), -1) # not sure why the colour here needs to be (1, 1, 1), as oppsed to (255, 255, 255) - scaling?
-circleMask = circleMask * (1.0 / np.count_nonzero(circleMask))
+circleMask = np.ones((diameter, diameter), dtype='float32')
+for yy in range(0, outRadius):
+    for xx in range(0, outRadius):
+        if (math.hypot(xx, yy) >= outRadius):
+            circleMask[xx + outRadius, yy + outRadius] = 0.0
+            circleMask[outRadius - xx, yy + outRadius] = 0.0
+            circleMask[xx + outRadius, outRadius - yy] = 0.0
+            circleMask[outRadius - xx, outRadius - yy] = 0.0
+    # end for xx
+# end for yy
+scaleFactor = np.count_nonzero(circleMask)
+circleMask = circleMask / scaleFactor # scale kernel to have a sum = 1.0
 
 convolved = cv2.filter2D(greyscale, -1, circleMask)
 
