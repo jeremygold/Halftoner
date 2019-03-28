@@ -33,6 +33,8 @@ ap.add_argument('-g', '--greyscale', dest='color', action='store_false', help='G
 ap.set_defaults(color=True)
 args = vars(ap.parse_args())
 
+circleToHexagon = np.sqrt(3.0) * np.pi / 6.0
+
 img = cv2.imread(args['input'])
 outFile = args['output']
 outRadius = int(args['radius'])
@@ -89,7 +91,8 @@ for yy in range(0, countY):
             if fR > threshold:  # ignore small
                 convolvedColor = convolved[iY, iX]
                 if colorOutput:
-                    color = (int(convolvedColor[0]), int(convolvedColor[1]), int(convolvedColor[2]))
+                    # Bunp up color by root 3 * pi / 6 to compensate for circle vs hexagonal area
+                    color = (int(convolvedColor[0] / circleToHexagon), int(convolvedColor[1] / circleToHexagon), int(convolvedColor[2] / circleToHexagon))
                 else:
                     color = (255, 255, 255)
                 # end if
