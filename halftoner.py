@@ -33,8 +33,6 @@ ap.add_argument('-g', '--greyscale', dest='color', action='store_false', help='G
 ap.set_defaults(color=True)
 args = vars(ap.parse_args())
 
-circleToHexagon = np.sqrt(3.0) * np.pi / 6.0
-
 img = cv2.imread(args['input'])
 outFile = args['output']
 outRadius = int(args['radius'])
@@ -91,8 +89,14 @@ for yy in range(0, countY):
             if fR > threshold:  # ignore small
                 convolvedColor = convolved[iY, iX]
                 if colorOutput:
-                    # Bunp up color by root 3 * pi / 6 to compensate for circle vs hexagonal area
-                    color = (int(convolvedColor[0] / circleToHexagon), int(convolvedColor[1] / circleToHexagon), int(convolvedColor[2] / circleToHexagon))
+                    # Bump up brightness by remainder of rounding operation - Do this in HSV space (increase V) to avoid color tinting
+                    frRemainder = fR - math.floor(fR)
+                    multiplier = (1.0 + frRemainder / fR)
+                    pixel = np.uint8([[np.array(convolvedColor)]])  # Create a single pixel image of the required color so we can convert to HSV
+                    pixelHsv = cv2.cvtColor(pixel, cv2.COLOR_BGR2HSV)
+                    pixelHsv[0, 0, 2] = np.minimum(pixelHsv[0, 0, 2] * multiplier, 255)  # Scale up value, and clamp to 255 maximum
+                    pixelBgr = cv2.cvtColor(pixelHsv, cv2.COLOR_HSV2BGR)
+                    color = (int(pixelBgr[0, 0, 0]), int(pixelBgr[0, 0, 1]), int(pixelBgr[0, 0, 2]))
                 else:
                     color = (255, 255, 255)
                 # end if
